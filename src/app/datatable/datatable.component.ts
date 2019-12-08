@@ -34,39 +34,39 @@ import { EventEmitter } from "@angular/core";
               {{ column | fieldToDisplay }}
             </mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <span [ngSwitch]="this.columnDefs[column].type">
-                <p *ngSwitchCase="'dropdown'">
+              <ng-container [ngSwitch]="columnDefs[column].type">
+                <ng-container *ngSwitchCase="'dropdown'">
                   <mat-select
-                    [(ngModel)]="element[column]"
+                    [(ngModel)]="element.active"
                     (click)="$event.stopPropagation()"
                   >
                     <mat-option
-                      [value]="column"
-                      *ngFor="let active of ['Yes', 'No']"
+                      [value]="element[column]"
+                      *ngFor="let option of columnDefs[column].data"
                     >
-                      {{ active }}
+                      {{ option }}
                     </mat-option>
                   </mat-select>
-                </p>
-                <p *ngSwitchCase="'number'">
+                </ng-container>
+                <ng-container *ngSwitchCase="'number'">
                   <input
                     matInput
                     type="number"
                     (click)="$event.stopPropagation()"
                     [(ngModel)]="element[column]"
                   />
-                </p>
-                <p *ngSwitchCase="'checkbox'">
+                </ng-container>
+                <ng-container *ngSwitchCase="'checkbox'">
                   <mat-checkbox
                     (click)="$event.stopPropagation()"
                     [(ngModel)]="element[column]"
                   ></mat-checkbox>
-                </p>
-                <p *ngSwitchCase="'none'"></p>
-                <p *ngSwitchDefault>
+                </ng-container>
+                <ng-container *ngSwitchCase="'none'"></ng-container>
+                <ng-container *ngSwitchDefault>
                   {{ element[column] }}
-                </p>
-              </span>
+                </ng-container>
+              </ng-container>
             </mat-cell>
           </span>
         </ng-container>

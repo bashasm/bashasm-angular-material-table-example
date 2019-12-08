@@ -14,12 +14,19 @@ import { DataService } from "../services/data.service";
   styles: [``]
 })
 export class TransactionsComponent implements OnInit {
-  public displayedColumns = ["name", "id", "cost", "quantity", "productId"];
+  public displayedColumns = [
+    "name",
+    "id",
+    "cost",
+    "quantity",
+    "productId",
+    "active"
+  ];
 
   public columnDefs = {
     name: {
       visible: true,
-      type: "dropdown"
+      type: "text"
     },
     id: {
       visible: false,
@@ -36,6 +43,11 @@ export class TransactionsComponent implements OnInit {
     productId: {
       visible: true,
       type: "none"
+    },
+    active: {
+      visible: true,
+      type: "dropdown",
+      data: ["Yes", "No"]
     }
   };
 
