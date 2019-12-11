@@ -5,6 +5,7 @@ import { DataService } from "../services/data.service";
   selector: "app-transactions",
   template: `
     <datatable
+      [selectable]="false"
       (selectionChange)="onSelectionChange($event)"
       [displayedColumns]="displayedColumns"
       [columnDefs]="columnDefs"
@@ -38,7 +39,9 @@ export class TransactionsComponent implements OnInit {
     },
     quantity: {
       visible: true,
-      type: "number"
+      type: "number",
+      min: 1,
+      max: Number.MAX_VALUE
     },
     productId: {
       visible: true,

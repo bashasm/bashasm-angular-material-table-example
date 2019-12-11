@@ -52,8 +52,12 @@ import { EventEmitter } from "@angular/core";
                   <input
                     matInput
                     type="number"
+                    (keydown)="onNumberKeydown($event)"
+                    (change)="onNumberChange(element, column)"
                     (click)="$event.stopPropagation()"
                     [(ngModel)]="element[column]"
+                    [min]="1"
+                    [max]="10000"
                   />
                 </ng-container>
                 <ng-container *ngSwitchCase="'checkbox'">
@@ -77,43 +81,16 @@ import { EventEmitter } from "@angular/core";
         <mat-row
           *matRowDef="let row; columns: columns"
           [style.background]="selection.isSelected(row) ? selectedRowClass : ''"
-          (click)="
-            selection.toggle(row); selectionChange.emit(selection.selected)
-          "
+          (click)="onRowClick(row)"
         ></mat-row>
       </mat-table>
     </mat-card>
   `,
-  styles: [
-    `
-      p {
-        display: block;
-        margin-top: 1em;
-        margin-bottom: 1em;
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      button {
-        background-color: rgb(57, 190, 62); /* Green */
-        border: none;
-        color: white;
-        padding: 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: rgb(32, 151, 36);
-      }
-    `
-  ]
+  styles: [``]
 })
 export class DatatableComponent implements OnInit, OnChanges {
+  @Input()
+  public selectable = true;
   @Input()
   public data: any;
   @Input()
@@ -136,10 +113,29 @@ export class DatatableComponent implements OnInit, OnChanges {
     console.log("[ngOnInit]", this.data);
   }
 
+  public onNumberKeydown(event: any) {
+    return event.charCode == 8 || event.charCode == 0
+      ? null
+      : event.charCode >= 48 && event.charCode <= 57;
+  }
+
+  public onNumberChange(element: any, column: any) {
+    if (!element[column] && this.columnDefs[column].min !== null) {
+      element[column] = this.columnDefs[column].min;
+    }
+  }
+
   public ngOnChanges(changes: SimpleChanges): void {
     console.log("[ngOnChanges]", changes);
     this.updateTable();
     this.selection.clear();
+  }
+
+  public onRowClick(row: any): void {
+    if (this.selectable) {
+      this.selection.toggle(row);
+      this.selectionChange.emit(this.selection.selected);
+    }
   }
 
   public filterBy(event: any): void {
