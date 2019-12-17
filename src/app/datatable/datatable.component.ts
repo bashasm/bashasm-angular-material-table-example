@@ -25,56 +25,57 @@ import { EventEmitter } from "@angular/core";
         matSortActive="symbol"
         matSortDirection="asc"
       >
-        <ng-container
-          matColumnDef="{{ column }}"
-          *ngFor="let column of columns; let i = index"
-        >
-          <span>
-            <mat-header-cell mat-sort-header *matHeaderCellDef>
-              {{ column | fieldToDisplay }}
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <ng-container [ngSwitch]="columnDefs[column].type">
-                <ng-container *ngSwitchCase="'dropdown'">
-                  <mat-select
-                    [(ngModel)]="element.active"
-                    (click)="$event.stopPropagation()"
-                  >
-                    <mat-option
-                      [value]="element[column]"
-                      *ngFor="let option of columnDefs[column].data"
+        <ng-container *ngIf="!isLoading">
+          <ng-container
+            matColumnDef="{{ column }}"
+            *ngFor="let column of columns; let i = index"
+          >
+            <span>
+              <mat-header-cell mat-sort-header *matHeaderCellDef>
+                {{ column | fieldToDisplay }}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <ng-container [ngSwitch]="columnDefs[column].type">
+                  <ng-container *ngSwitchCase="'dropdown'">
+                    <mat-select
+                      [(ngModel)]="element.active"
+                      (click)="$event.stopPropagation()"
                     >
-                      {{ option }}
-                    </mat-option>
-                  </mat-select>
+                      <mat-option
+                        [value]="element[column]"
+                        *ngFor="let option of columnDefs[column].data"
+                      >
+                        {{ option }}
+                      </mat-option>
+                    </mat-select>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'number'">
+                    <input
+                      matInput
+                      type="number"
+                      (keydown)="onNumberKeydown($event)"
+                      (change)="onNumberChange(element, column)"
+                      (click)="$event.stopPropagation()"
+                      [(ngModel)]="element[column]"
+                      [min]="1"
+                      [max]="10000"
+                    />
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'checkbox'">
+                    <mat-checkbox
+                      (click)="$event.stopPropagation()"
+                      [(ngModel)]="element[column]"
+                    ></mat-checkbox>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'none'"></ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ element[column] }}
+                  </ng-container>
                 </ng-container>
-                <ng-container *ngSwitchCase="'number'">
-                  <input
-                    matInput
-                    type="number"
-                    (keydown)="onNumberKeydown($event)"
-                    (change)="onNumberChange(element, column)"
-                    (click)="$event.stopPropagation()"
-                    [(ngModel)]="element[column]"
-                    [min]="1"
-                    [max]="10000"
-                  />
-                </ng-container>
-                <ng-container *ngSwitchCase="'checkbox'">
-                  <mat-checkbox
-                    (click)="$event.stopPropagation()"
-                    [(ngModel)]="element[column]"
-                  ></mat-checkbox>
-                </ng-container>
-                <ng-container *ngSwitchCase="'none'"></ng-container>
-                <ng-container *ngSwitchDefault>
-                  {{ element[column] }}
-                </ng-container>
-              </ng-container>
-            </mat-cell>
-          </span>
+              </mat-cell>
+            </span>
+          </ng-container>
         </ng-container>
-
         <mat-header-row
           *matHeaderRowDef="columns; sticky: true"
         ></mat-header-row>
@@ -84,11 +85,14 @@ import { EventEmitter } from "@angular/core";
           (click)="onRowClick(row)"
         ></mat-row>
       </mat-table>
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
     </mat-card>
   `,
   styles: [``]
 })
 export class DatatableComponent implements OnInit, OnChanges {
+  @Input()
+  public isLoading = false;
   @Input()
   public selectable = true;
   @Input()

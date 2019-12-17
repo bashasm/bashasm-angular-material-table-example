@@ -11,7 +11,8 @@ import {
   MatCardModule,
   MatInputModule,
   MatTabsModule,
-  MatSelectModule
+  MatSelectModule,
+  MatProgressSpinnerModule
 } from "@angular/material";
 import { AppComponent } from "./app.component";
 import { FieldToDisplayPipe } from "../field-to-display.pipe";
@@ -31,7 +32,8 @@ import { DatatableComponent } from "./datatable/datatable.component";
     MatInputModule,
     BrowserAnimationsModule,
     MatTabsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     AppComponent,

@@ -4,7 +4,9 @@ import { DataService } from "../services/data.service";
 @Component({
   selector: "app-transactions",
   template: `
+    <button mat-raised-button (click)="onRefresh()">Refresh</button>
     <datatable
+      [isLoading]="isLoading"
       [selectable]="false"
       (selectionChange)="onSelectionChange($event)"
       [displayedColumns]="displayedColumns"
@@ -55,11 +57,24 @@ export class TransactionsComponent implements OnInit {
   };
 
   public transactions: any = [];
+  public isLoading: boolean;
+
   constructor(private dataService: DataService) {}
 
   public ngOnInit() {
+    this.loadData();
+  }
+
+  public onRefresh() {
+    this.loadData();
+  }
+
+  public loadData() {
+    this.isLoading = true;
+    this.transactions = [];
     this.dataService.getTransactions().subscribe(transactions => {
       console.log("[got transactions]", transactions);
+      this.isLoading = false;
       this.transactions = transactions;
     });
   }
