@@ -29,7 +29,8 @@ export class TransactionsComponent implements OnInit {
   public columnDefs = {
     name: {
       visible: true,
-      type: "text"
+      type: "text",
+      uppercase: true
     },
     id: {
       visible: false,

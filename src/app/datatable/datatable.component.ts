@@ -69,7 +69,11 @@ import { EventEmitter } from "@angular/core";
                   </ng-container>
                   <ng-container *ngSwitchCase="'none'"></ng-container>
                   <ng-container *ngSwitchDefault>
-                    {{ element[column] }}
+                    {{
+                      columnDefs[column].uppercase
+                        ? (element[column] | uppercase)
+                        : ""
+                    }}
                   </ng-container>
                 </ng-container>
               </mat-cell>
