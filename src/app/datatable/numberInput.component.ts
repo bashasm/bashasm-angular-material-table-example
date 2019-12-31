@@ -29,7 +29,7 @@ export class NumberInputComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public onNumberKeyPress(event: KeyboardEvent, element: any, column: any) {
+  public onNumberKeyPress(event: KeyboardEvent, element: any, column: string) {
     let value = Number((event.target as any).value + event.key) || 0;
     let isValid =
       event.charCode == 8 || event.charCode == 0
@@ -45,7 +45,7 @@ export class NumberInputComponent implements OnInit {
     return isValid;
   }
 
-  public onNumberChange(element: any, column: any) {
+  public onNumberChange(element: any, column: string) {
     if (Number.isInteger(this.options.min)) {
       let minValue = this.options.min;
       if (!element[column] || element[column] < minValue) {
@@ -57,5 +57,20 @@ export class NumberInputComponent implements OnInit {
         element[column] = minValue;
       }
     }
+
+    if (this.options.decimal) {
+      console.log(element[column]);
+      element[column] = this.addZeroes(element[column].toString());
+      console.log(element[column]);
+    }
+  }
+
+  public addZeroes(num: string) {
+    let value = num;
+    let res = num.split(".");
+    if (res.length == 1 || res[1].length < 3) {
+      value = Number(value).toFixed(2);
+    }
+    return value;
   }
 }
