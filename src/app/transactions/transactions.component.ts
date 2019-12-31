@@ -43,6 +43,8 @@ export class TransactionsComponent implements OnInit {
     quantity: {
       visible: true,
       type: "number",
+      decimal: true,
+      step: 0.01,
       min: 1,
       max: Number.MAX_VALUE
     },
