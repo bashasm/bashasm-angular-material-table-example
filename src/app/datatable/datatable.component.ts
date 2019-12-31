@@ -50,19 +50,12 @@ import { EventEmitter } from "@angular/core";
                     </mat-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="'number'">
-                    <input
-                      matInput
-                      type="number"
-                      [step]="
-                        columnDefs[column].step ? columnDefs[column].step : 1
-                      "
-                      (keypress)="onNumberKeyPress($event, element, column)"
-                      (change)="onNumberChange(element, column)"
-                      (click)="$event.stopPropagation()"
-                      [(ngModel)]="element[column]"
-                      [min]="columnDefs[column].min"
-                      [max]="columnDefs[column].max"
-                    />
+                    <number
+                      [options]="columnDefs[column]"
+                      [element]="element"
+                      [column]="column"
+                    >
+                    </number>
                   </ng-container>
                   <ng-container *ngSwitchCase="'checkbox'">
                     <mat-checkbox
@@ -122,36 +115,6 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     console.log("[ngOnInit]", this.data);
-  }
-
-  public onNumberKeyPress(event: KeyboardEvent, element: any, column: any) {
-    let value = Number((event.target as any).value + event.key) || 0;
-    let isValid =
-      event.charCode == 8 || event.charCode == 0
-        ? null
-        : event.charCode >= 48 && event.charCode <= 57;
-    if (isValid && this.columnDefs[column].max !== undefined) {
-      isValid = value <= this.columnDefs[column].max;
-    }
-    if (isValid && this.columnDefs[column].decimal) {
-      let regex = /^\d+(\.\d{0,2})?$/g;
-      isValid = regex.test((event.target as any).value + event.key);
-    }
-    return isValid;
-  }
-
-  public onNumberChange(element: any, column: any) {
-    if (Number.isInteger(this.columnDefs[column].min)) {
-      let minValue = this.columnDefs[column].min;
-      if (!element[column] || element[column] < minValue) {
-        element[column] = minValue;
-      }
-    } else if (this.columnDefs[column].min !== null) {
-      let minValue = element[this.columnDefs[column].min];
-      if (element[column] < minValue) {
-        element[column] = minValue;
-      }
-    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

@@ -18,6 +18,7 @@ import { AppComponent } from "./app.component";
 import { FieldToDisplayPipe } from "../field-to-display.pipe";
 import { TransactionsComponent } from "./transactions/transactions.component";
 import { DatatableComponent } from "./datatable/datatable.component";
+import { NumberInputComponent } from "./datatable/numberInput.component";
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { DatatableComponent } from "./datatable/datatable.component";
   ],
   declarations: [
     AppComponent,
+    NumberInputComponent,
     DatatableComponent,
     FieldToDisplayPipe,
     TransactionsComponent

@@ -7,7 +7,7 @@ import { DataService } from "../services/data.service";
     <button mat-raised-button (click)="onRefresh()">Refresh</button>
     <datatable
       [isLoading]="isLoading"
-      [selectable]="false"
+      [selectable]="true"
       (selectionChange)="onSelectionChange($event)"
       [displayedColumns]="displayedColumns"
       [columnDefs]="columnDefs"
@@ -38,7 +38,7 @@ export class TransactionsComponent implements OnInit {
     },
     cost: {
       visible: true,
-      type: "checkbox"
+      type: "number"
     },
     quantity: {
       visible: true,
