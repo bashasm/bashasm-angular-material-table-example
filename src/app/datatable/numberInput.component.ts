@@ -27,7 +27,13 @@ export class NumberInputComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  public ngOnInit(): void {
+    if (this.options.decimal) {
+      this.element[this.column] = this.addZeroes(
+        this.element[this.column].toString()
+      );
+    }
+  }
 
   public onNumberKeyPress(event: KeyboardEvent, element: any, column: string) {
     let value = Number((event.target as any).value + event.key) || 0;
