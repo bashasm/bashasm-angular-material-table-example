@@ -7,7 +7,13 @@ import {
   SimpleChanges,
   Output
 } from "@angular/core";
-import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import {
+  MatPaginator,
+  MatSort,
+  MatTableDataSource,
+  MatSortable,
+  MatSortHeader
+} from "@angular/material";
 import { SelectionModel } from "@angular/cdk/collections";
 import { EventEmitter } from "@angular/core";
 
@@ -19,12 +25,7 @@ import { EventEmitter } from "@angular/core";
         <input (keyup)="filterBy($event)" matInput placeholder="Filter" />
       </mat-form-field>
 
-      <mat-table
-        [dataSource]="rows"
-        matSort
-        matSortActive="symbol"
-        matSortDirection="asc"
-      >
+      <mat-table [dataSource]="dataSource" matSort>
         <ng-container *ngIf="!isLoading">
           <ng-container
             matColumnDef="{{ column }}"
@@ -106,7 +107,7 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   public selectedRowClass = "lightblue";
 
-  public rows = new MatTableDataSource<any>();
+  public dataSource = new MatTableDataSource<any>();
   public columns = [];
   public selection = new SelectionModel<any>(true, []);
 
@@ -115,6 +116,16 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     console.log("[ngOnInit]", this.data);
+  }
+
+  public sortBy(id, start?: "asc" | "desc") {
+    start = start || "asc";
+    const matSort = this.dataSource.sort;
+    const disableClear = false;
+
+    // reset state so that start is the first sort direction that you will see
+    matSort.sort({ id: null, start, disableClear });
+    matSort.sort({ id, start, disableClear });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -132,19 +143,19 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   public filterBy(event: any): void {
     const filterBy: string = event.target.value;
-    this.rows.filter = filterBy;
+    this.dataSource.filter = filterBy;
   }
 
   public isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.rows.data.length;
+    const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
   private updateRows(): void {
-    this.rows = new MatTableDataSource<any>(this.data);
-    this.rows.sort = this.sort;
-    this.rows.paginator = this.paginator;
+    this.dataSource = new MatTableDataSource<any>(this.data);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   private updateColumns(): void {

@@ -1,11 +1,14 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { DataService } from "../services/data.service";
+import { DatatableComponent } from "../datatable/datatable.component";
 
 @Component({
   selector: "app-transactions",
   template: `
     <button mat-raised-button (click)="onRefresh()">Refresh</button>
+    <button mat-raised-button (click)="onAdd()">Add</button>
     <datatable
+      #datatable
       [isLoading]="isLoading"
       [selectable]="true"
       (selectionChange)="onSelectionChange($event)"
@@ -17,6 +20,9 @@ import { DataService } from "../services/data.service";
   styles: [``]
 })
 export class TransactionsComponent implements OnInit {
+  @ViewChild(DatatableComponent, { static: true })
+  public datatable: DatatableComponent;
+
   public displayedColumns = [
     "name",
     "id",
@@ -79,7 +85,22 @@ export class TransactionsComponent implements OnInit {
       console.log("[got transactions]", transactions);
       this.isLoading = false;
       this.transactions = transactions;
+      this.datatable.sortBy("cost", "desc");
     });
+  }
+
+  public onAdd() {
+    this.transactions = [
+      ...this.transactions,
+      {
+        name: "",
+        id: 1,
+        cost: 0,
+        quantity: 10,
+        productId: 1,
+        active: "Yes"
+      }
+    ];
   }
 
   public onSelectionChange(e: any) {

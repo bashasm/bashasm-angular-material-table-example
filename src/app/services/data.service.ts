@@ -36,6 +36,6 @@ export class DataService {
   constructor() {}
 
   public getTransactions() {
-    return of(transactions).pipe(delay(2000));
+    return of(transactions).pipe(delay(100));
   }
 }
